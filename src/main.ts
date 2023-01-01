@@ -1,7 +1,8 @@
 import "./style.css";
-import { fetchTasks, updateTasks } from "./models/todoItems";
+import { fetchTasks, updateTasks, createNewTask } from "./models/todoItems";
 
 const todoItems = await fetchTasks();
+
 const addNewTask = async (newTaskName: string) => {
   if (!todoItems.some((task) => task.name === newTaskName))
     await updateTasks([
@@ -14,10 +15,21 @@ const addNewTask = async (newTaskName: string) => {
 };
 
 const renderTasks = () => {
-  const incompleteTasks =
-    document.querySelector<HTMLUListElement>("#incomplete-tasks");
-  todoItems.forEach((task) => {});
+  todoItems.forEach((task) => {
+    createNewTask(task.name);
+  });
 };
+
+const addTaskButton = document.querySelector<HTMLButtonElement>("#add-button");
+
+if (addTaskButton)
+  addTaskButton.addEventListener("click", () => {
+    const input = document.querySelector<HTMLInputElement>("#new-task");
+    if (input) {
+      const newTaskName = input.value;
+      addNewTask(newTaskName);
+    }
+  });
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div class="container">
@@ -33,3 +45,5 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       <ul id="completed-tasks"></ul>
     </div>
 `;
+
+renderTasks();

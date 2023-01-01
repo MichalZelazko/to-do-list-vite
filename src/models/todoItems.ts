@@ -36,25 +36,27 @@ const editButton = document.createElement("button");
 editButton.classList.add("edit");
 editButton.innerText = "Edit";
 
-const createNewTask = (newTaskName: string) => {
+export const createNewTask = (newTaskName: string) => {
   const newElement = document.createElement("li");
-
   const checkbox = document.createElement("input");
-  if (checkbox) {
-    checkbox.setAttribute("type", "checkbox");
-    checkbox.addEventListener("click", () => {
-      const list = checkbox.parentNode.parentNode;
-      const listItem = checkbox.parentNode;
-      const isIncompleted = list.id === "completed-tasks";
-      if (isIncompleted) {
-        listItem.appendChild(editButton);
-        incompleteTasks.appendChild(listItem);
-      } else {
-        listItem.querySelector(".edit").remove();
-        completedTasks.appendChild(listItem);
+  checkbox.setAttribute("type", "checkbox");
+  checkbox.addEventListener("click", () => {
+    const listItem = checkbox.parentElement;
+    if (listItem) {
+      const list = listItem.parentElement;
+      if (list) {
+        const isIncompleted = list.id === "completed-tasks";
+        if (isIncompleted) {
+          listItem.appendChild(editButton);
+          if (incompleteTasks) incompleteTasks.appendChild(listItem);
+        } else {
+          const toRemove = listItem.querySelector(".edit");
+          if (toRemove) toRemove.remove();
+          if (completedTasks) completedTasks.appendChild(listItem);
+        }
       }
-    });
-  }
+    }
+  });
 
   const label = document.createElement("label");
   label.innerText = newTaskName;
@@ -69,14 +71,15 @@ const createNewTask = (newTaskName: string) => {
     editButton.addEventListener("click", () => {
       if (editButton.parentElement) {
         const label = editButton.parentElement.querySelector("label");
-        const input =
-          editButton.parentElement.querySelector("input[type=text]");
+        const input = <HTMLInputElement>(
+          editButton.parentElement.querySelector("input[type=text]")
+        );
         if (label && input) {
-          if (editButton.parentElement.hasAttribute("class", "editMode")) {
-            editButton.parentElement.removeAttribute("class", "editMode");
+          if (editButton.parentElement.classList.contains("editMode")) {
+            editButton.parentElement.classList.remove("editMode");
             label.innerText = input.value;
           } else {
-            editButton.parentElement.setAttribute("class", "editMode");
+            editButton.parentElement.classList.add("editMode");
             input.value = label.innerText;
           }
         }
