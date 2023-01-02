@@ -38,6 +38,7 @@ editButton.innerText = "Edit";
 
 export const createNewTask = (newTaskName: string) => {
   const newElement = document.createElement("li");
+
   const checkbox = document.createElement("input");
   checkbox.setAttribute("type", "checkbox");
   checkbox.addEventListener("click", () => {
@@ -102,6 +103,9 @@ export const createNewTask = (newTaskName: string) => {
   newElement.appendChild(editButton);
   newElement.appendChild(deleteButton);
 
-  //console.log(newElement);
+  console.log(newElement);
   if (incompleteTasks) incompleteTasks.appendChild(newElement);
+  console.log(incompleteTasks);
 };
+
+// jak zrobic zeby widzialo htmla co jest w main.ts
